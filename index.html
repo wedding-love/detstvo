@@ -1,3 +1,8 @@
+Отличная задача! Я доработал таймер, чтобы на мобильных устройствах он гарантированно помещался в одну строку, и обновил названия файлов для дресс-кода.
+
+Вот полный исправленный HTML-файл.
+
+```html
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -37,6 +42,7 @@
             color: #2d2d2d; 
             overflow-x: hidden;
             line-height: 1.7;
+            width: 100%;
         }
 
         /* Анимация */
@@ -340,52 +346,74 @@
             line-height: 1.5;
         }
 
-        /* ===== ТАЙМЕР (БЕЗ РАМОК) ===== */
+        /* ===== ТАЙМЕР (АДАПТИВНАЯ ВЕРСТКА БЕЗ ПЕРЕНОСА) ===== */
+        .timer-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            margin-top: 24px;
+        }
+
         .timer-container { 
             display: flex; 
             justify-content: center; 
             align-items: baseline;
-            gap: 22px; 
-            margin-top: 24px;
-            flex-wrap: wrap;
+            gap: 2.5vw; /* Гибкие отступы, зависящие от ширины экрана */
+            flex-wrap: nowrap; /* ЗАПРЕЩАЕМ ПЕРЕНОС — ВСЕГДА В ОДНУ СТРОКУ */
+            width: 100%;
         }
         
         .timer-item { 
             background: none;
-            padding: 12px 10px; 
-            min-width: 70px;
+            padding: 8px 4px; 
+            min-width: 0; /* Позволяет блоку сжиматься */
             border: none;
             text-align: center;
+            flex-shrink: 1;
         }
         
         .timer-val { 
             display: block; 
             font-family: 'Cormorant Garamond', serif;
-            font-size: 52px; 
+            font-size: clamp(36px, 10vw, 52px); /* Динамический размер: от 36px до 52px */
             font-weight: 300;
-            letter-spacing: 3px;
+            letter-spacing: 2px;
             line-height: 1;
             color: #ffffff;
+            white-space: nowrap;
         }
         
         .timer-label { 
             font-family: 'Inter', sans-serif;
             font-weight: 300;
-            font-size: 13px; 
+            font-size: clamp(10px, 2.5vw, 13px); /* Динамический размер подписи */
             text-transform: uppercase; 
-            letter-spacing: 3px;
+            letter-spacing: 2px;
             opacity: 0.7;
             display: block;
-            margin-top: 8px;
+            margin-top: 6px;
+            white-space: nowrap;
         }
         
         .timer-separator {
             font-family: 'Cormorant Garamond', serif;
-            font-size: 40px;
+            font-size: clamp(28px, 8vw, 40px); /* Динамический размер двоеточия */
             font-weight: 300;
             color: rgba(255,255,255,0.5);
             line-height: 1;
-            padding-bottom: 22px;
+            padding-bottom: clamp(14px, 3vw, 22px);
+            flex-shrink: 0;
+        }
+
+        /* Убираем лишние отступы на очень маленьких экранах */
+        @media (max-width: 360px) {
+            .timer-container {
+                gap: 1.5vw;
+            }
+            .timer-item {
+                padding: 4px 2px;
+            }
         }
 
         /* ===== ДРЕСС-КОД С ПЕРЕКЛЮЧАТЕЛЕМ ===== */
@@ -704,7 +732,7 @@
             line-height: 1.6;
         }
 
-        /* ===== АДАПТИВНОСТЬ ===== */
+        /* ===== ОБЩАЯ АДАПТИВНОСТЬ (ОСТАЛЬНЫЕ ЭЛЕМЕНТЫ) ===== */
         @media (max-width: 420px) {
             section {
                 padding: 48px 20px;
@@ -758,27 +786,6 @@
             
             .quote-text {
                 font-size: 21px;
-            }
-            
-            .timer-val {
-                font-size: 40px;
-            }
-            
-            .timer-separator {
-                font-size: 32px;
-            }
-            
-            .timer-item {
-                min-width: 58px;
-                padding: 8px 4px;
-            }
-            
-            .timer-container {
-                gap: 14px;
-            }
-            
-            .timer-label {
-                font-size: 11px;
             }
             
             .t-time {
@@ -933,29 +940,6 @@
             
             .quote-text {
                 font-size: 19px;
-            }
-            
-            .timer-val {
-                font-size: 32px;
-            }
-            
-            .timer-separator {
-                font-size: 26px;
-                padding-bottom: 18px;
-            }
-            
-            .timer-item {
-                min-width: 50px;
-                padding: 6px 2px;
-            }
-            
-            .timer-container {
-                gap: 8px;
-            }
-            
-            .timer-label {
-                font-size: 9px;
-                letter-spacing: 2px;
             }
             
             .t-time {
@@ -1214,7 +1198,7 @@
     </section>
 
     <!-- ═══════════════════════════════════════ -->
-    <!-- СЕКЦИЯ 6: ТАЙМЕР (БЕЗ РАМОК) -->
+    <!-- СЕКЦИЯ 6: ТАЙМЕР (АДАПТИВНЫЙ, В ОДНУ СТРОКУ) -->
     <!-- ═══════════════════════════════════════ -->
     <section class="section-primary reveal">
         <h2 class="serif-title-white">До торжества осталось</h2>
@@ -1223,25 +1207,27 @@
             Мы считаем каждый день, и с каждым днём сердце бьётся всё чаще в предвкушении нашей встречи
         </p>
         
-        <div class="timer-container" id="timer">
-            <div class="timer-item">
-                <span class="timer-val" id="days">00</span>
-                <span class="timer-label">дней</span>
-            </div>
-            <span class="timer-separator">:</span>
-            <div class="timer-item">
-                <span class="timer-val" id="hours">00</span>
-                <span class="timer-label">часов</span>
-            </div>
-            <span class="timer-separator">:</span>
-            <div class="timer-item">
-                <span class="timer-val" id="minutes">00</span>
-                <span class="timer-label">минут</span>
-            </div>
-            <span class="timer-separator">:</span>
-            <div class="timer-item">
-                <span class="timer-val" id="seconds">00</span>
-                <span class="timer-label">секунд</span>
+        <div class="timer-wrapper">
+            <div class="timer-container" id="timer">
+                <div class="timer-item">
+                    <span class="timer-val" id="days">00</span>
+                    <span class="timer-label">дней</span>
+                </div>
+                <span class="timer-separator">:</span>
+                <div class="timer-item">
+                    <span class="timer-val" id="hours">00</span>
+                    <span class="timer-label">часов</span>
+                </div>
+                <span class="timer-separator">:</span>
+                <div class="timer-item">
+                    <span class="timer-val" id="minutes">00</span>
+                    <span class="timer-label">минут</span>
+                </div>
+                <span class="timer-separator">:</span>
+                <div class="timer-item">
+                    <span class="timer-val" id="seconds">00</span>
+                    <span class="timer-label">секунд</span>
+                </div>
             </div>
         </div>
     </section>
@@ -1275,11 +1261,11 @@
         <!-- Контент: Для неё -->
         <div id="for-her" class="tabs-content active">
             <div>
-                <div class="dress-photo" style="background-image: url('her_1.png');"></div>
+                <div class="dress-photo" style="background-image: url('платье1.jpg');"></div>
                 <p class="dress-desc">Вечерние платья</p>
             </div>
             <div>
-                <div class="dress-photo" style="background-image: url('her_2.png');"></div>
+                <div class="dress-photo" style="background-image: url('платье2.jpg');"></div>
                 <p class="dress-desc">Коктейльные образы</p>
             </div>
         </div>
@@ -1287,11 +1273,11 @@
         <!-- Контент: Для него -->
         <div id="for-him" class="tabs-content">
             <div>
-                <div class="dress-photo" style="background-image: url('him_1.png');"></div>
+                <div class="dress-photo" style="background-image: url('костюм1.jpg');"></div>
                 <p class="dress-desc">Классические костюмы</p>
             </div>
             <div>
-                <div class="dress-photo" style="background-image: url('him_2.png');"></div>
+                <div class="dress-photo" style="background-image: url('костюм3.jpg');"></div>
                 <p class="dress-desc">Стиль Casual / Black Tie</p>
             </div>
         </div>
@@ -1571,3 +1557,4 @@
     </script>
 </body>
 </html>
+```
